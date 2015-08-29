@@ -1,5 +1,5 @@
 # log-merger
-Simple command line utility to merge different log files based on their timestamps
+Simple command line utility to merge different log files based on their timestamps.
 
 ## Usage
 
@@ -10,12 +10,12 @@ java -jar log-merger-0.0.1-jar-with-dependencies.jar -i in1.log,in2.log -o out.l
 ```
 The available options are:
 ```
---delimiter <d>             the delimiter
---field <f>                 the field number(s) (comma separated) containing the timestamp
---input <i>                 the log files (comma separated)
---marker                    if a marker for each file should be inserted
---output <o>                the output file
---timestamp-format <tf>     the timestamp format (e.g. yyyy-MM-dd'T'HH:mm:ss.SSSXXX)
+-d,--delimiter <del>            the delimiter
+-f,--field <field(s)>           the field number(s) (comma separated) containing the timestamp
+-i,--input <file(s)>            the log files (comma separated)
+-m,--marker                     if a marker for each file should be inserted
+-o,--output <file>              the output file
+-tf,--timestamp-format <tf>     the timestamp format (e.g. yyyy-MM-dd'T'HH:mm:ss.SSSXXX)
 ```
 When a file contains date and time in separate fields (e.g. 2015-08-29 14:15:30,472) you can provide the options `-d " " -tf "yyyy-MM-dd'T'HH:mm:ss,SSS" -f 1,2`
 as the fields one and two are concatenated and parsed as one field according to the specified timestamp format.

@@ -42,7 +42,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.morpho.im.solr.EnrollSolr2MultipleCollections</mainClass>
+                            <mainClass>logmerge.App</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

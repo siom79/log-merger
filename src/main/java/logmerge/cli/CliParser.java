@@ -15,18 +15,18 @@ public class CliParser {
 
 	public CliOptions parse(String[] args) {
 		Options options = new Options();
-		options.addOption(Option.builder().argName("d").hasArg().desc("the delimiter").type(String.class).longOpt("delimiter").build());
-		options.addOption(Option.builder().argName("tf").hasArg().desc("the timestamp format (e.g. yyyy-MM-dd'T'HH:mm:ss.SSSXXX)").type(String.class).longOpt("timestamp-format").build());
-		options.addOption(Option.builder().argName("i").hasArg().desc("the log files (comma separated)").type(String.class).longOpt("input").required().build());
-		options.addOption(Option.builder().argName("o").hasArg().desc("the output file").type(String.class).longOpt("output").build());
-		options.addOption(Option.builder().argName("f").hasArg().desc("the field number(s) (comma separated) containing the timestamp").type(String.class).longOpt("field").build());
-		options.addOption(Option.builder().argName("m").desc("if a marker for each file should be inserted").type(Boolean.class).longOpt("marker").build());
+		options.addOption(Option.builder("d").argName("del").hasArg().desc("the delimiter").type(String.class).longOpt("delimiter").build());
+		options.addOption(Option.builder("tf").argName("tf").hasArg().desc("the timestamp format (e.g. yyyy-MM-dd'T'HH:mm:ss.SSSXXX)").type(String.class).longOpt("timestamp-format").build());
+		options.addOption(Option.builder("i").argName("file(s)").hasArg().desc("the log files (comma separated)").type(String.class).longOpt("input").required().build());
+		options.addOption(Option.builder("o").argName("file").hasArg().desc("the output file").type(String.class).longOpt("output").build());
+		options.addOption(Option.builder("f").argName("field(s)").hasArg().desc("the field number(s) (comma separated) containing the timestamp").type(String.class).longOpt("field").build());
+		options.addOption(Option.builder("m").desc("if a marker for each file should be inserted").type(Boolean.class).longOpt("marker").build());
 		CommandLineParser parser = new DefaultParser();
 		try {
 			CommandLine cli = parser.parse(options, args);
 			CliOptions cliOptions = new CliOptions();
 			if (cli.hasOption("d")) {
-				String optionValue = cli.getOptionValue("d");
+				String optionValue = cli.getOptionValue("delimiter");
 				cliOptions.setDelimiter(optionValue);
 			}
 			if (cli.hasOption("tf")) {
@@ -38,7 +38,7 @@ public class CliParser {
 				}
 				cliOptions.setTimestampFormat(optionValue);
 			}
-			if (cli.hasOption("i")) {
+			if (cli.hasOption("i") || cli.hasOption("input")) {
 				String optionValue = cli.getOptionValue("i");
 				String[] files = optionValue.split(",");
 				for (String fileName : files) {

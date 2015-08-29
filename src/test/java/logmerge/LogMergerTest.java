@@ -78,7 +78,7 @@ public class LogMergerTest {
         SimpleDateFormat sdf = new SimpleDateFormat(timestampFormat);
         try (FileWriter fw1 = new FileWriter(inputPath1.toFile());
              FileWriter fw2 = new FileWriter(inputPath2.toFile())) {
-            for (int i = 0; i < 1000000; i++) {
+            for (int i = 0; i < 100000; i++) {
                 fw1.write(sdf.format(new Date()) + " " + i + "\n");
                 fw1.flush();
                 fw2.write(sdf.format(new Date()) + " " + i + "\n");

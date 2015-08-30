@@ -6,7 +6,7 @@
 
     <groupId>log-merger</groupId>
     <artifactId>log-merger</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

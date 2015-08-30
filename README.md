@@ -6,7 +6,7 @@ Simple command line utility to merge different log files based on their timestam
 To merge two log files which contain the timestamp in the format `2015-08-29T15:49:46,919` in the first column
 (columns are separated by space):
 ```
-java -jar log-merger-0.0.1-jar-with-dependencies.jar -i in1.log,in2.log -o out.log -m -d " " -tf "yyyy-MM-dd'T'HH:mm:ss,SSS" -f 1
+java -jar log-merger-0.0.2-jar-with-dependencies.jar -i in1.log,in2.log -o out.log -m -d " " -tf "yyyy-MM-dd'T'HH:mm:ss,SSS" -f 1
 ```
 The available options are:
 ```
@@ -23,13 +23,14 @@ as the fields one and two are concatenated and parsed as one field according to 
 The option `--marker` inserts a maker like `[0]` at the beginning of each line into the output to indicate from which file the current line stems. The
 input files are numbered (starting with zero) such that the marker `[3]` tells you the lines stems from the fourth input file.
 
-If the option `--input` is not provided the output is written to stdout. Hence you can use this tool in a pipline with
+If the option `--input` is not provided, the output is written to stdout. Hence you can use this tool in a pipeline with
 standard utilities like grep, cut, etc.
 
 More information on how to specify the timestamp format can be found [here](http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html).
 
-If a line does not contain the number of specified fields or does not contain a timestamp at the given fiels it is treated
-like it would belong to the last line with propert timestamp. This way the stacktrace of an exception is merged together with the timestamp line.
+If a line does not contain the number of specified fields or does not contain a timestamp at the given fields, it is treated
+like it would belong to the last line with proper timestamp. This way the stacktrace of an exception is merged together with the timestamp line.
+
 file1.log:
 ```
 2015-08-29 15:49:46,641 ERROR [org.jboss.msc.service.fail] (MSC service thread 1-4) MSC000001: Failed to start service jboss.undertow.listener.default: org.jboss.msc.service.StartException in service jboss.undertow.listener.default: Could not start http listener

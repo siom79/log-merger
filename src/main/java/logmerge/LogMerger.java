@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,18 +29,17 @@ public class LogMerger {
             logFiles = createLogFiles(cliOptions);
             LogFile nextLogFile = getNextLogFile(logFiles);
             while (nextLogFile != null) {
-                List<String> nextLines = nextLogFile.getNextLines();
-                if (nextLines.size() > 0) {
-                    String markerString = "[" + nextLogFile.getMarker() + "]" + cliOptions.getDelimiter();
-                    for (String line : nextLines) {
-                        if (cliOptions.isMarker()) {
-                            outputStream.write(markerString.getBytes("UTF-8"));
-                        }
-                        outputStream.write(line.getBytes("UTF-8"));
-                        outputStream.write('\n');
+                String markerString = "[" + nextLogFile.getMarker() + "]" + cliOptions.getDelimiter();
+                Iterator<String> iterator = nextLogFile.getNextLines();
+                while (iterator.hasNext()) {
+                    String line = iterator.next();
+                    if (cliOptions.isMarker()) {
+                        outputStream.write(markerString.getBytes("UTF-8"));
                     }
-                    outputStream.flush();
+                    outputStream.write(line.getBytes("UTF-8"));
+                    outputStream.write('\n');
                 }
+                outputStream.flush();
                 nextLogFile = getNextLogFile(logFiles);
             }
 		} catch (IOException e) {
@@ -98,7 +98,7 @@ public class LogMerger {
 		for (String fileName : cliOptions.getLogFiles()) {
 			try {
 				BufferedReader fileReader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"));
-                LogFile logFile = new LogFile(fileReader, simpleDateFormat, cliOptions, marker++);
+                LogFile logFile = new LogFile(fileName, fileReader, simpleDateFormat, cliOptions, marker++);
 				logFiles.add(logFile);
 			} catch (FileNotFoundException e) {
 				throw new LogMergeException(LogMergeException.Reason.FileNotFound, "File not found: " + e.getMessage());

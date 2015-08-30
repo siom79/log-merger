@@ -28,6 +28,58 @@ standard utilities like grep, cut, etc.
 
 More information on how to specify the timestamp format can be found [here](http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html).
 
+If a line does not contain the number of specified fields or does not contain a timestamp at the given fiels it is treated
+like it would belong to the last line with propert timestamp. This way the stacktrace of an exception is merged together with the timestamp line.
+file1.log:
+```
+2015-08-29 15:49:46,641 ERROR [org.jboss.msc.service.fail] (MSC service thread 1-4) MSC000001: Failed to start service jboss.undertow.listener.default: org.jboss.msc.service.StartException in service jboss.undertow.listener.default: Could not start http listener
+	at org.wildfly.extension.undertow.ListenerService.start(ListenerService.java:150)
+	at org.jboss.msc.service.ServiceControllerImpl$StartTask.startService(ServiceControllerImpl.java:1948)
+	at org.jboss.msc.service.ServiceControllerImpl$StartTask.run(ServiceControllerImpl.java:1881)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.BindException: Die Adresse wird bereits verwendet
+	at sun.nio.ch.Net.bind0(Native Method)
+	at sun.nio.ch.Net.bind(Net.java:436)
+	at sun.nio.ch.Net.bind(Net.java:428)
+	at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:214)
+	at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:74)
+	at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:67)
+	at org.xnio.nio.NioXnioWorker.createTcpConnectionServer(NioXnioWorker.java:182)
+	at org.xnio.XnioWorker.createStreamConnectionServer(XnioWorker.java:243)
+	at org.wildfly.extension.undertow.HttpListenerService.startListening(HttpListenerService.java:115)
+	at org.wildfly.extension.undertow.ListenerService.start(ListenerService.java:147)
+	... 5 more
+```
+file2.log:
+```
+2015-08-29 15:49:46,033 INFO  [org.xnio] (MSC service thread 1-3) XNIO version 3.3.1.Final
+```
+output:
+```
+[1] 2015-08-29 15:49:46,033 INFO  [org.xnio] (MSC service thread 1-3) XNIO version 3.3.1.Final
+[0] 2015-08-29 15:49:46,641 ERROR [org.jboss.msc.service.fail] (MSC service thread 1-4) MSC000001: Failed to start service jboss.undertow.listener.default: org.jboss.msc.service.StartException in service jboss.undertow.listener.default: Could not start http listener
+[0] 	at org.wildfly.extension.undertow.ListenerService.start(ListenerService.java:150)
+[0] 	at org.jboss.msc.service.ServiceControllerImpl$StartTask.startService(ServiceControllerImpl.java:1948)
+[0] 	at org.jboss.msc.service.ServiceControllerImpl$StartTask.run(ServiceControllerImpl.java:1881)
+[0] 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+[0] 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+[0] 	at java.lang.Thread.run(Thread.java:745)
+[0] Caused by: java.net.BindException: Die Adresse wird bereits verwendet
+[0] 	at sun.nio.ch.Net.bind0(Native Method)
+[0] 	at sun.nio.ch.Net.bind(Net.java:436)
+[0] 	at sun.nio.ch.Net.bind(Net.java:428)
+[0] 	at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:214)
+[0] 	at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:74)
+[0] 	at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:67)
+[0] 	at org.xnio.nio.NioXnioWorker.createTcpConnectionServer(NioXnioWorker.java:182)
+[0] 	at org.xnio.XnioWorker.createStreamConnectionServer(XnioWorker.java:243)
+[0] 	at org.wildfly.extension.undertow.HttpListenerService.startListening(HttpListenerService.java:115)
+[0] 	at org.wildfly.extension.undertow.ListenerService.start(ListenerService.java:147)
+[0] 	... 5 more
+```
+
 ## Download
 
 You can download a copy of `log-merger` from the [downloads](https://github.com/siom79/log-merger/releases) page.

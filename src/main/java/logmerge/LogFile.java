@@ -8,12 +8,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LogFile implements AutoCloseable {
     private static final Logger LOGGER = Logger.getLogger(LogFile.class.getName());
+    private final String fileName;
     private final BufferedReader bufferedReader;
     private final SimpleDateFormat simpleDateFormat;
     private final CliOptions cliOptions;
@@ -23,7 +25,8 @@ public class LogFile implements AutoCloseable {
     private Date currentTimestamp = null;
     private boolean eof = false;
 
-    public LogFile(BufferedReader bufferedReader, SimpleDateFormat simpleDateFormat, CliOptions cliOptions, int marker) {
+    public LogFile(String fileName, BufferedReader bufferedReader, SimpleDateFormat simpleDateFormat, CliOptions cliOptions, int marker) {
+        this.fileName = fileName;
         this.bufferedReader = bufferedReader;
         this.simpleDateFormat = simpleDateFormat;
         this.cliOptions = cliOptions;
@@ -40,23 +43,38 @@ public class LogFile implements AutoCloseable {
         return null;
     }
 
-    public List<String> getNextLines() throws IOException {
-        List<String> lines = new ArrayList<>();
-        if (currentLine != null) {
-            lines.add(currentLine);
-            readNextLine();
-            while (currentLine != null) {
-                Date timestampFromLine = extractTimestampFromLine();
-                if (timestampFromLine != null) {
-                    currentTimestamp = timestampFromLine;
-                    break;
-                } else {
-                    lines.add(currentLine);
-                }
-                readNextLine();
+    public Iterator<String> getNextLines() throws IOException {
+        return new Iterator<String>() {
+            private boolean hasNext = !eof;
+
+            @Override
+            public boolean hasNext() {
+                return hasNext;
             }
-        }
-        return lines;
+
+            @Override
+            public String next() {
+                String lineToReturn = currentLine;
+                try {
+                    readNextLine();
+                    if (currentLine != null) {
+                        Date timestampFromLine = extractTimestampFromLine();
+                        if (timestampFromLine != null) {
+                            currentTimestamp = timestampFromLine;
+                            hasNext = false;
+                        } else {
+                            hasNext = true;
+                        }
+                    } else {
+                        hasNext = false;
+                    }
+                } catch (IOException e) {
+                    LOGGER.log(Level.SEVERE, "Failed to read from file '" + fileName + "': " + e.getMessage(), e);
+                    currentLine = null;
+                }
+                return lineToReturn;
+            }
+        };
     }
 
     public Date getNextTimestampFromFile() throws IOException {

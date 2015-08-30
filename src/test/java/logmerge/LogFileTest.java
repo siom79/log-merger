@@ -6,14 +6,14 @@ import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class LogFileTest {
@@ -21,31 +21,37 @@ public class LogFileTest {
     @Test
     public void testWildflyServerLog() throws IOException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss,SSS");
-        BufferedReader br = new BufferedReader(new FileReader(Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "wildfly_server.log").toFile()));
+        Path path = Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "wildfly_server.log");
+        BufferedReader br = new BufferedReader(new FileReader(path.toFile()));
         CliOptions cliOptions = new CliOptions();
         cliOptions.setDelimiter(" ");
         cliOptions.setFieldNumber(new int[]{1, 2});
-        LogFile logFile = new LogFile(br, sdf, cliOptions, 0);
+        LogFile logFile = new LogFile(path.toString(), br, sdf, cliOptions, 0);
         Date date = logFile.peekNextTimestamp();
         assertThat(date, is(createDate(29, 8, 2015, 14, 15, 30, 472)));
-        List<String> nextLines = logFile.getNextLines();
-        assertThat(nextLines.size(), is(1));
+        Iterator<String> iterator = logFile.getNextLines();
+        assertThat(iterator.hasNext(), is(true));
+        assertThat(iterator.next(), not(nullValue()));
         date = logFile.peekNextTimestamp();
         assertThat(date, is(createDate(29, 8, 2015, 14, 15, 31, 44)));
-        nextLines = logFile.getNextLines();
-        assertThat(nextLines.size(), is(1));
+        iterator = logFile.getNextLines();
+        assertThat(iterator.hasNext(), is(true));
+        assertThat(iterator.next(), not(nullValue()));
         date = logFile.peekNextTimestamp();
         assertThat(date, is(createDate(29, 8, 2015, 14, 15, 31, 103)));
-        nextLines = logFile.getNextLines();
-        assertThat(nextLines.size(), is(1));
+        iterator = logFile.getNextLines();
+        assertThat(iterator.hasNext(), is(true));
+        assertThat(iterator.next(), not(nullValue()));
         date = logFile.peekNextTimestamp();
         assertThat(date, is(createDate(29, 8, 2015, 14, 15, 31, 104)));
-        nextLines = logFile.getNextLines();
-        assertThat(nextLines.size(), is(87));
+        iterator = logFile.getNextLines();
+        assertThat(iterator.hasNext(), is(true));
+        assertThat(iterator.next(), not(nullValue()));
         date = logFile.peekNextTimestamp();
         assertThat(date, is(createDate(29, 8, 2015, 14, 15, 31, 104)));
-        nextLines = logFile.getNextLines();
-        assertThat(nextLines.size(), is(1));
+        iterator = logFile.getNextLines();
+        assertThat(iterator.hasNext(), is(true));
+        assertThat(iterator.next(), not(nullValue()));
     }
 
     private Date createDate(int day, int month, int year, int hour, int minute, int second, int ms) {

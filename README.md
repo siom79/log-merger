@@ -16,6 +16,7 @@ The available options are:
 -m,--marker                     if a marker for each file should be inserted
 -o,--output <file>              the output file
 -tf,--timestamp-format <tf>     the timestamp format (e.g. yyyy-MM-dd'T'HH:mm:ss.SSSXXX)
+-v,--verbose                    outputs additional logging information
 ```
 When a file contains date and time in separate fields (e.g. 2015-08-29 14:15:30,472) you can provide the options `-d " " -tf "yyyy-MM-dd'T'HH:mm:ss,SSS" -f 1,2`
 as the fields one and two are concatenated and parsed as one field according to the specified timestamp format.
@@ -27,6 +28,7 @@ If the option `--input` is not provided, the output is written to stdout. Hence 
 standard utilities like grep, cut, etc.
 
 More information on how to specify the timestamp format can be found [here](http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html).
+For httpd's access logs you can use for example: `'['dd/MMM/yyyy:HH:mm:ss` together with space as delimiter.
 
 If a line does not contain the number of specified fields or does not contain a timestamp at the given fields, it is treated
 like it would belong to the last line with proper timestamp. This way the stacktrace of an exception is merged together with the timestamp line.

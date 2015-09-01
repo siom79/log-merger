@@ -103,8 +103,12 @@ public class LogFile implements AutoCloseable {
         try {
             returnValue = simpleDateFormat.parse(value);
         } catch (ParseException e) {
+            String message = "Could not transform value '" + value + "' in line " + currentLineNumber + " to a timestamp";
             if (LOGGER.isLoggable(Level.FINE)) {
-                LOGGER.log(Level.FINE, "Could not transform value '" + value + "' in line " + currentLineNumber + " to a timestamp: " + e.getMessage());
+                LOGGER.log(Level.FINE, message + ": " + e.getMessage());
+            }
+            if (cliOptions.isVerbose()) {
+                System.err.println(message + ".");
             }
         }
         return returnValue;

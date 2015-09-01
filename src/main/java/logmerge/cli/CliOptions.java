@@ -12,6 +12,7 @@ public class CliOptions {
 	private int[] fieldNumber = new int[]{1};
 	private String outputFile = null;
 	private boolean marker = false;
+	private boolean verbose;
 
 	public String getDelimiter() {
 		return delimiter;
@@ -57,6 +58,14 @@ public class CliOptions {
 		return marker;
 	}
 
+	public void setVerbose(boolean verbose) {
+		this.verbose = verbose;
+	}
+
+	public boolean isVerbose() {
+		return verbose;
+	}
+
 	@Override
 	public String toString() {
 		return "CliOptions{" +
@@ -66,6 +75,7 @@ public class CliOptions {
 				", fieldNumber=" + Arrays.toString(fieldNumber) +
 				", outputFile='" + outputFile + '\'' +
 				", marker=" + marker +
+				", verbose=" + verbose +
 				'}';
 	}
 }

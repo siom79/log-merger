@@ -21,6 +21,7 @@ public class CliParser {
 		options.addOption(Option.builder("o").argName("file").hasArg().desc("the output file").type(String.class).longOpt("output").build());
 		options.addOption(Option.builder("f").argName("field(s)").hasArg().desc("the field number(s) (comma separated) containing the timestamp").type(String.class).longOpt("field").build());
 		options.addOption(Option.builder("m").desc("if a marker for each file should be inserted").type(Boolean.class).longOpt("marker").build());
+		options.addOption(Option.builder("v").desc("outputs additional logging information").type(Boolean.class).longOpt("verbose").build());
 		CommandLineParser parser = new DefaultParser();
 		try {
 			CommandLine cli = parser.parse(options, args);
@@ -78,6 +79,9 @@ public class CliParser {
             if (cli.hasOption("m")) {
                 cliOptions.setMarker(true);
             }
+			if (cli.hasOption("v")) {
+				cliOptions.setVerbose(true);
+			}
 			if (LOGGER.isLoggable(Level.FINE)) {
 				LOGGER.log(Level.FINE, cliOptions.toString());
 			}

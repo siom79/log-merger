@@ -184,4 +184,32 @@ public class LogMergerTest {
         }
         assertThatAllTimestampsAreAscending(timestampFormat, outputLines);
     }
+
+    @Test
+    public void testMergeApacheLogs() throws IOException {
+        String timestampFormat = "'['dd/MMM/yyyy:HH:mm:ss";
+        Path outputPath = Paths.get(System.getProperty("user.dir"), "target", "apache_access12.log");
+        Path inputPath1 = Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "apache_access1.log");
+        Path inputPath2 = Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "apache_access2.log");
+        CliOptions cliOptions = new CliOptions();
+        cliOptions.setDelimiter(" ");
+        cliOptions.setFieldNumber(new int[]{4});
+        cliOptions.setOutputFile(outputPath.toString());
+        cliOptions.setTimestampFormat(timestampFormat);
+        cliOptions.getLogFiles().add(inputPath1.toString());
+        cliOptions.getLogFiles().add(inputPath2.toString());
+        cliOptions.setMarker(true);
+        LogMerger logMerger = new LogMerger(cliOptions);
+        logMerger.merge();
+        assertThat(Files.exists(outputPath), is(true));
+        List<String> outputLines = Files.readAllLines(outputPath);
+        assertThat(outputLines.size(), is(4));
+        for (String inputLine : Files.readAllLines(inputPath1)) {
+            assertThat(containsLine(outputLines, inputLine), is(true));
+        }
+        for (String inputLine : Files.readAllLines(inputPath2)) {
+            assertThat(containsLine(outputLines, inputLine), is(true));
+        }
+        assertThatAllTimestampsAreAscending(timestampFormat, outputLines);
+    }
 }

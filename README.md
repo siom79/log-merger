@@ -33,6 +33,12 @@ For httpd's access logs you can use for example: `'['dd/MMM/yyyy:HH:mm:ss` toget
 If a line does not contain the number of specified fields or does not contain a timestamp at the given fields, it is treated
 like it would belong to the last line with proper timestamp. This way the stacktrace of an exception is merged together with the timestamp line.
 
+Using the option `--verbose` will output any errors happening during timestamp conversion to stderr. As lines that do not contain
+a valid timestamp will be appended to the last line with a valid timestamp, it can happen that the output is empty when specifying a
+wrong timestamp format or the wrong field as there is no last line to append the invalid line to.
+
+## Example:
+
 file1.log:
 ```
 2015-08-29 15:49:46,641 ERROR [org.jboss.msc.service.fail] (MSC service thread 1-4) MSC000001: Failed to start service jboss.undertow.listener.default: org.jboss.msc.service.StartException in service jboss.undertow.listener.default: Could not start http listener

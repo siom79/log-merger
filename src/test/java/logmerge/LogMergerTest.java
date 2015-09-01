@@ -1,10 +1,10 @@
 package logmerge;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import logmerge.cli.CliOptions;
 import org.junit.Test;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,8 +13,8 @@ import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class LogMergerTest {
 
@@ -35,12 +35,12 @@ public class LogMergerTest {
         LogMerger logMerger = new LogMerger(cliOptions);
         logMerger.merge();
         assertThat(Files.exists(outputPath), is(true));
-        List<String> outputLines = Files.readAllLines(outputPath);
+        List<String> outputLines = Files.readAllLines(outputPath, Charset.forName("UTF-8"));
         assertThat(outputLines.size(), is(337));
-        for (String inputLine : Files.readAllLines(inputPath1)) {
+        for (String inputLine : Files.readAllLines(inputPath1, Charset.forName("UTF-8"))) {
             assertThat(containsLine(outputLines, inputLine), is(true));
         }
-        for (String inputLine : Files.readAllLines(inputPath2)) {
+        for (String inputLine : Files.readAllLines(inputPath2, Charset.forName("UTF-8"))) {
             assertThat(containsLine(outputLines, inputLine), is(true));
         }
         assertThatAllTimestampsAreAscending(timestampFormat, outputLines);
@@ -76,7 +76,6 @@ public class LogMergerTest {
     }
 
     @Test
-    @Ignore
     public void testBigFiles() throws IOException {
         String timestampFormat = "yyyy-MM-ddHH:mm:ss,SSS";
         Path outputPath = Paths.get(System.getProperty("user.dir"), "target", "bigfile_output.log");
@@ -174,12 +173,12 @@ public class LogMergerTest {
         LogMerger logMerger = new LogMerger(cliOptions);
         logMerger.merge();
         assertThat(Files.exists(outputPath), is(true));
-        List<String> outputLines = Files.readAllLines(outputPath);
+        List<String> outputLines = Files.readAllLines(outputPath, Charset.forName("UTF-8"));
         assertThat(outputLines.size(), is(20));
-        for (String inputLine : Files.readAllLines(inputPath1)) {
+        for (String inputLine : Files.readAllLines(inputPath1, Charset.forName("UTF-8"))) {
             assertThat(containsLine(outputLines, inputLine), is(true));
         }
-        for (String inputLine : Files.readAllLines(inputPath2)) {
+        for (String inputLine : Files.readAllLines(inputPath2, Charset.forName("UTF-8"))) {
             assertThat(containsLine(outputLines, inputLine), is(true));
         }
         assertThatAllTimestampsAreAscending(timestampFormat, outputLines);
@@ -202,12 +201,12 @@ public class LogMergerTest {
         LogMerger logMerger = new LogMerger(cliOptions);
         logMerger.merge();
         assertThat(Files.exists(outputPath), is(true));
-        List<String> outputLines = Files.readAllLines(outputPath);
+        List<String> outputLines = Files.readAllLines(outputPath, Charset.forName("UTF-8"));
         assertThat(outputLines.size(), is(4));
-        for (String inputLine : Files.readAllLines(inputPath1)) {
+        for (String inputLine : Files.readAllLines(inputPath1, Charset.forName("UTF-8"))) {
             assertThat(containsLine(outputLines, inputLine), is(true));
         }
-        for (String inputLine : Files.readAllLines(inputPath2)) {
+        for (String inputLine : Files.readAllLines(inputPath2, Charset.forName("UTF-8"))) {
             assertThat(containsLine(outputLines, inputLine), is(true));
         }
         assertThatAllTimestampsAreAscending(timestampFormat, outputLines);

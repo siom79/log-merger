@@ -78,6 +78,11 @@ public class LogFile implements AutoCloseable {
                 }
                 return lineToReturn;
             }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("remove is not supported on this iterator.");
+            }
         };
     }
 

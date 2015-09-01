@@ -34,13 +34,17 @@ public class LogFile implements AutoCloseable {
     }
 
     public Date peekNextTimestamp() throws IOException {
+        Date returnValue = null;
         if (!eof) {
             if (currentTimestamp == null) {
                 currentTimestamp = getNextTimestampFromFile();
             }
-            return currentTimestamp;
+            returnValue = currentTimestamp;
         }
-        return null;
+        if (returnValue != null) {
+            returnValue = new Date(returnValue.getTime());
+        }
+        return returnValue;
     }
 
     public Iterator<String> getNextLines() throws IOException {

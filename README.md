@@ -1,5 +1,5 @@
 # log-merger
-Simple command line utility to merge different log files based on their timestamps.
+Simple command line utility to merge different log files based on their timestamps preserving stacktraces.
 
 ## Usage
 

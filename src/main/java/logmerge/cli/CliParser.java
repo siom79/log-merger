@@ -61,6 +61,9 @@ public class CliParser {
                 for (String part : parts) {
                     try {
                         int fieldNumber = Integer.parseInt(part);
+						if (fieldNumber < 1) {
+							throw new LogMergeException(LogMergeException.Reason.CliParser, "The field number '" + fieldNumber + "' is too small. Please use an integer greater than 0.");
+						}
                         fields[fieldsIndex++] = fieldNumber;
                     } catch (NumberFormatException e) {
                         throw new LogMergeException(LogMergeException.Reason.CliParser, "Please provide an integer for option 'f': " + e.getMessage());
